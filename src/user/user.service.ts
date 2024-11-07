@@ -13,7 +13,7 @@ export class UserService {
   private users: User[] = [];
 
   private messages = {
-    USER_NOT_FOUND: 'User is not found.',
+    NOT_FOUND: 'User is not found.',
     WRONG_PASSWORD: 'User old password is wrong.',
   };
 
@@ -35,7 +35,7 @@ export class UserService {
     const user = this.users.find((user) => user.id === id);
 
     if (!user) {
-      throw new NotFoundException(this.messages.USER_NOT_FOUND);
+      throw new NotFoundException(this.messages.NOT_FOUND);
     }
 
     return this.excludePassword([user])[0];
@@ -58,7 +58,7 @@ export class UserService {
     const user = this.users.find((user) => user.id === id);
 
     if (!user) {
-      throw new NotFoundException(this.messages.USER_NOT_FOUND);
+      throw new NotFoundException(this.messages.NOT_FOUND);
     }
 
     this.users = this.users.filter((user) => user.id !== id);
@@ -71,7 +71,7 @@ export class UserService {
     const user = this.users.find((user) => user.id === id);
 
     if (!user) {
-      throw new NotFoundException(this.messages.USER_NOT_FOUND);
+      throw new NotFoundException(this.messages.NOT_FOUND);
     }
 
     if (user.password !== data.oldPassword) {
