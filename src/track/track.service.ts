@@ -62,4 +62,24 @@ export class TrackService {
 
     return newTrack;
   }
+
+  async setArtistIdToNull(id: string): Promise<void> {
+    const track = this.tracks.find((track) => track.artistId === id);
+
+    if (!track) {
+      return;
+    }
+
+    track.artistId = null;
+  }
+
+  async setAlbumIdToNull(id: string): Promise<void> {
+    const track = this.tracks.find((track) => track.albumId === id);
+
+    if (!track) {
+      return;
+    }
+
+    track.albumId = null;
+  }
 }

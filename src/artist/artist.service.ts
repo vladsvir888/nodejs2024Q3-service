@@ -3,9 +3,16 @@ import { v4 as uuidv4 } from 'uuid';
 import { Artist } from './interfaces/artist.interface';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
+import { AlbumService } from 'src/album/album.service';
+import { TrackService } from 'src/track/track.service';
 
 @Injectable()
 export class ArtistService {
+  constructor(
+    private readonly albumService: AlbumService,
+    private readonly trackService: TrackService,
+  ) {}
+
   private artists: Artist[] = [];
 
   private messages = {
@@ -44,6 +51,9 @@ export class ArtistService {
     }
 
     this.artists = this.artists.filter((artist) => artist.id !== id);
+
+    await this.albumService.setArtistIdToNull(id);
+    await this.trackService.setArtistIdToNull(id);
   }
 
   async update(id: string, data: UpdateArtistDto): Promise<Artist> {

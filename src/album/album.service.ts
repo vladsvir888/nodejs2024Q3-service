@@ -3,9 +3,12 @@ import { v4 as uuidv4 } from 'uuid';
 import { Album } from './interfaces/album.interface';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
+import { TrackService } from 'src/track/track.service';
 
 @Injectable()
 export class AlbumService {
+  constructor(private readonly trackService: TrackService) {}
+
   private albums: Album[] = [];
 
   private messages = {
@@ -44,6 +47,8 @@ export class AlbumService {
     }
 
     this.albums = this.albums.filter((album) => album.id !== id);
+
+    await this.trackService.setAlbumIdToNull(id);
   }
 
   async update(id: string, data: UpdateAlbumDto): Promise<Album> {
@@ -61,5 +66,15 @@ export class AlbumService {
     this.albums.splice(albumIndex, 1, newAlbum);
 
     return newAlbum;
+  }
+
+  async setArtistIdToNull(id: string): Promise<void> {
+    const album = this.albums.find((album) => album.artistId === id);
+
+    if (!album) {
+      return;
+    }
+
+    album.artistId = null;
   }
 }
