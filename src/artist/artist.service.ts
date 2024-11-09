@@ -1,16 +1,24 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  forwardRef,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
 import { Artist } from './interfaces/artist.interface';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
 import { AlbumService } from 'src/album/album.service';
 import { TrackService } from 'src/track/track.service';
+import { FavsService } from 'src/favs/favs.service';
 
 @Injectable()
 export class ArtistService {
   constructor(
     private readonly albumService: AlbumService,
     private readonly trackService: TrackService,
+    @Inject(forwardRef(() => FavsService))
+    private readonly favsService: FavsService,
   ) {}
 
   private artists: Artist[] = [];
@@ -54,6 +62,10 @@ export class ArtistService {
 
     await this.albumService.setArtistIdToNull(id);
     await this.trackService.setArtistIdToNull(id);
+
+    if (await this.favsService.hasArtist(id)) {
+      await this.favsService.deleteArtist(id);
+    }
   }
 
   async update(id: string, data: UpdateArtistDto): Promise<Artist> {

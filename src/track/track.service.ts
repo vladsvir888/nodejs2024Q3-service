@@ -1,11 +1,22 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  forwardRef,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
 import { Track } from './interfaces/track.interface';
 import { CreateTrackDto } from './dto/create-track.dto';
 import { UpdateTrackDto } from './dto/update-track.dto';
+import { FavsService } from 'src/favs/favs.service';
 
 @Injectable()
 export class TrackService {
+  constructor(
+    @Inject(forwardRef(() => FavsService))
+    private readonly favsService: FavsService,
+  ) {}
+
   private tracks: Track[] = [];
 
   private messages = {
@@ -44,6 +55,10 @@ export class TrackService {
     }
 
     this.tracks = this.tracks.filter((track) => track.id !== id);
+
+    if (await this.favsService.hasTrack(id)) {
+      await this.favsService.deleteTrack(id);
+    }
   }
 
   async update(id: string, data: UpdateTrackDto): Promise<Track> {

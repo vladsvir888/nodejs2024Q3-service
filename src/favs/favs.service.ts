@@ -1,4 +1,6 @@
 import {
+  forwardRef,
+  Inject,
   Injectable,
   NotFoundException,
   UnprocessableEntityException,
@@ -11,8 +13,11 @@ import { FavoritesResponse } from './interfaces/favs.interface';
 @Injectable()
 export class FavsService {
   constructor(
+    @Inject(forwardRef(() => ArtistService))
     private readonly artistService: ArtistService,
+    @Inject(forwardRef(() => AlbumService))
     private readonly albumService: AlbumService,
+    @Inject(forwardRef(() => TrackService))
     private readonly trackService: TrackService,
   ) {}
 
@@ -29,6 +34,10 @@ export class FavsService {
 
   async getAll(): Promise<FavoritesResponse> {
     return this.favs;
+  }
+
+  async hasTrack(id: string): Promise<boolean> {
+    return this.favs.tracks.some((track) => track.id === id);
   }
 
   async addTrack(id: string): Promise<void> {
@@ -53,6 +62,10 @@ export class FavsService {
     this.favs.tracks.splice(trackIndex, 1);
   }
 
+  async hasAlbum(id: string): Promise<boolean> {
+    return this.favs.albums.some((album) => album.id === id);
+  }
+
   async addAlbum(id: string): Promise<void> {
     const albums = await this.albumService.getAll();
     const album = albums.find((album) => album.id === id);
@@ -73,6 +86,10 @@ export class FavsService {
 
     const albumIndex = this.favs.albums.indexOf(album);
     this.favs.albums.splice(albumIndex, 1);
+  }
+
+  async hasArtist(id: string): Promise<boolean> {
+    return this.favs.artists.some((artist) => artist.id === id);
   }
 
   async addArtist(id: string): Promise<void> {
