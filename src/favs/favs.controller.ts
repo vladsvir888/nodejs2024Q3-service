@@ -8,13 +8,7 @@ import {
   Post,
 } from '@nestjs/common';
 import { FavsService } from './favs.service';
-import {
-  ApiTags,
-  ApiResponse,
-  ApiBody,
-  ApiParam,
-  ApiOperation,
-} from '@nestjs/swagger';
+import { ApiTags, ApiResponse, ApiParam, ApiOperation } from '@nestjs/swagger';
 
 @ApiTags('Favs')
 @Controller('favs')
