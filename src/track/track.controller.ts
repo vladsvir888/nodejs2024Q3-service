@@ -11,7 +11,6 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { TrackService } from './track.service';
-import { Track } from './interfaces/track.interface';
 import { CreateTrackDto } from './dto/create-track.dto';
 import { UpdateTrackDto } from './dto/update-track.dto';
 import {
@@ -21,6 +20,7 @@ import {
   ApiParam,
   ApiOperation,
 } from '@nestjs/swagger';
+import { Track } from './track.entity';
 
 @ApiTags('Track')
 @Controller('track')
