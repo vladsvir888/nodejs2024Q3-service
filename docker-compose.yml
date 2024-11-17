@@ -8,6 +8,9 @@ services:
       - '${PORT}:${PORT}'
     depends_on:
       - db
+    restart: always
+    networks:
+      - bridge_net
     volumes:
       - ./src:/app/src
   db:
@@ -18,9 +21,15 @@ services:
       - .env
     ports:
       - '${POSTGRES_PORT}:${POSTGRES_PORT}'
+    restart: always
+    networks:
+      - bridge_net
     volumes:
       - pgdata:/var/lib/postgresql/data
       - pglogs:/var/log/postgresql
 volumes:
   pgdata:
   pglogs:
+networks:
+  bridge_net:
+    driver: bridge
