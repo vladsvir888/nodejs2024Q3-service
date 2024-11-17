@@ -11,7 +11,6 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { ArtistService } from './artist.service';
-import { Artist } from './interfaces/artist.interface';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
 import {
@@ -21,6 +20,7 @@ import {
   ApiParam,
   ApiOperation,
 } from '@nestjs/swagger';
+import { Artist } from './artist.entity';
 
 @ApiTags('Artist')
 @Controller('artist')
