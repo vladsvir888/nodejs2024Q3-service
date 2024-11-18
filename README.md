@@ -29,6 +29,12 @@ npm install
 npm run docker
 ```
 
+## Docker scan images
+
+```
+npm run docker-scan
+```
+
 ## Testing
 
 After application running open new terminal and enter:

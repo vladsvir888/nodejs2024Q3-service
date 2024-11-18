@@ -1,6 +1,7 @@
 services:
   app:
     container_name: app
+    image: sv782/home-library-service
     build: .
     env_file:
       - .env
