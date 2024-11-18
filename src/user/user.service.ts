@@ -4,13 +4,18 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
-import { User, UserWithoutPassword } from './interfaces/user.interface';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
+import { User, UserWithoutPassword } from './user.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class UserService {
-  private users: User[] = [];
+  constructor(
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+  ) {}
 
   private messages = {
     NOT_FOUND: 'User is not found.',
@@ -28,11 +33,12 @@ export class UserService {
   }
 
   async getAll(): Promise<UserWithoutPassword[]> {
-    return this.excludePassword(this.users);
+    const users = await this.userRepository.find();
+    return this.excludePassword(users);
   }
 
   async getById(id: string): Promise<UserWithoutPassword> {
-    const user = this.users.find((user) => user.id === id);
+    const user = await this.userRepository.findOne({ where: { id } });
 
     if (!user) {
       throw new NotFoundException(this.messages.NOT_FOUND);
@@ -49,26 +55,26 @@ export class UserService {
       updatedAt: Date.now(),
       version: 1,
     };
-    this.users.push(newUser);
+    await this.userRepository.save(newUser);
 
     return this.excludePassword([newUser])[0];
   }
 
   async delete(id: string): Promise<void> {
-    const user = this.users.find((user) => user.id === id);
+    const user = await this.userRepository.findOne({ where: { id } });
 
     if (!user) {
       throw new NotFoundException(this.messages.NOT_FOUND);
     }
 
-    this.users = this.users.filter((user) => user.id !== id);
+    await this.userRepository.delete(id);
   }
 
   async update(
     id: string,
     data: UpdatePasswordDto,
   ): Promise<UserWithoutPassword> {
-    const user = this.users.find((user) => user.id === id);
+    const user = await this.userRepository.findOne({ where: { id } });
 
     if (!user) {
       throw new NotFoundException(this.messages.NOT_FOUND);
@@ -78,15 +84,14 @@ export class UserService {
       throw new ForbiddenException(this.messages.WRONG_PASSWORD);
     }
 
-    const userIndex = this.users.indexOf(user);
     const newUser = {
       ...user,
+      createdAt: Number(user.createdAt),
       password: data.newPassword,
       version: user.version + 1,
       updatedAt: Date.now(),
     };
-    this.users.splice(userIndex, 1, newUser);
-
+    await this.userRepository.update(id, newUser);
     return this.excludePassword([newUser])[0];
   }
 }
