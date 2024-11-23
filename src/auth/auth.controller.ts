@@ -9,6 +9,7 @@ import { AuthService } from './auth.service';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { ApiOperation, ApiBody, ApiResponse } from '@nestjs/swagger';
 import { UserWithoutPassword } from 'src/user/user.entity';
+import { Public } from './auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -28,6 +29,7 @@ export class AuthController {
     status: 400,
     description: 'Bad request',
   })
+  @Public()
   @Post('/signup')
   async signUp(
     @Body(new ValidationPipe()) signUpDto: CreateUserDto,
@@ -54,6 +56,7 @@ export class AuthController {
     description: 'Incorrect login or password',
   })
   @HttpCode(200)
+  @Public()
   @Post('/login')
   async signIn(
     @Body(new ValidationPipe()) signInDto: CreateUserDto,
