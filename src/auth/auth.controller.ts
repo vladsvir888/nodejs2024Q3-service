@@ -10,6 +10,8 @@ import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { ApiOperation, ApiBody, ApiResponse } from '@nestjs/swagger';
 import { UserWithoutPassword } from 'src/user/user.entity';
 import { Public } from './auth.guard';
+import { Tokens } from 'src/token/types';
+import { RefreshTokenDto } from 'src/token/dto/refresh-token.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -60,7 +62,35 @@ export class AuthController {
   @Post('/login')
   async signIn(
     @Body(new ValidationPipe()) signInDto: CreateUserDto,
-  ): Promise<{ accessToken: string }> {
+  ): Promise<Tokens> {
     return await this.authService.signIn(signInDto);
+  }
+
+  @ApiOperation({
+    summary: 'Get new pair of Access token and Refresh token',
+  })
+  @ApiBody({
+    type: RefreshTokenDto,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Successful getting of tokens',
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'No refreshToken in body',
+  })
+  @ApiResponse({
+    status: 403,
+    description: 'Refresh token is invalid or expired',
+  })
+  @HttpCode(200)
+  @Public()
+  @Post('/refresh')
+  async refresh(
+    @Body(new ValidationPipe({ errorHttpStatusCode: 401 }))
+    refreshToken: RefreshTokenDto,
+  ) {
+    return await this.authService.refresh(refreshToken);
   }
 }
