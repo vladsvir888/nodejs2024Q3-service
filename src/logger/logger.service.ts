@@ -8,10 +8,12 @@ import { LevelLog, TLevelLog } from './types';
 export class CustomLogger implements LoggerService {
   private logsDir: string;
   private logsFile: string;
+  private logsErrorFile: string;
 
   constructor() {
     this.logsDir = 'logs';
-    this.logsFile = 'logs.txt';
+    this.logsFile = 'logs.log';
+    this.logsErrorFile = 'logs-error.log';
     this.createDir();
   }
 
@@ -59,6 +61,13 @@ export class CustomLogger implements LoggerService {
         join(process.cwd(), this.logsDir, this.logsFile),
         logMessage + '\n',
       );
+
+      if (level === LevelLog.error) {
+        await appendFile(
+          join(process.cwd(), this.logsDir, this.logsErrorFile),
+          logMessage + '\n',
+        );
+      }
     } catch (error) {
       console.log(error.message);
     }
