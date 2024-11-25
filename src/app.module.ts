@@ -10,6 +10,7 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { TokenModule } from './token/token.module';
+import { LoggerModule } from './logger/logger.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { TokenModule } from './token/token.module';
     }),
     AuthModule,
     TokenModule,
+    LoggerModule,
   ],
   controllers: [AppController],
   providers: [AppService],

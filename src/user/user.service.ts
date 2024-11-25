@@ -50,7 +50,10 @@ export class UserService {
 
   async create(user: CreateUserDto): Promise<UserWithoutPassword> {
     const ms = Date.now();
-    const hash = await bcrypt.hash(user.password, Number(process.env.SALT));
+    const hash = await bcrypt.hash(
+      user.password,
+      Number(process.env.CRYPT_SALT),
+    );
     const newUser = {
       login: user.login,
       password: hash,
@@ -94,7 +97,10 @@ export class UserService {
       throw new ForbiddenException(this.messages.WRONG_PASSWORD);
     }
 
-    const hash = await bcrypt.hash(user.password, Number(process.env.SALT));
+    const hash = await bcrypt.hash(
+      user.password,
+      Number(process.env.CRYPT_SALT),
+    );
     const newUser = {
       ...user,
       password: hash,

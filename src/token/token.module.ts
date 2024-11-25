@@ -9,9 +9,9 @@ import { Token } from './token.entity';
   imports: [
     TypeOrmModule.forFeature([Token]),
     JwtModule.register({
-      secret: process.env.JWT_SECRET,
+      secret: process.env.JWT_SECRET_KEY,
       signOptions: {
-        expiresIn: process.env.TOKEN_EXPIRES_IN,
+        expiresIn: process.env.TOKEN_EXPIRE_TIME,
       },
     }),
   ],

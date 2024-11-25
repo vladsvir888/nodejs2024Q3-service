@@ -13,6 +13,7 @@ import { Public } from './auth.guard';
 import { Tokens } from 'src/token/types';
 import { RefreshTokenDto } from 'src/token/dto/refresh-token.dto';
 
+@Public()
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
@@ -31,7 +32,6 @@ export class AuthController {
     status: 400,
     description: 'Bad request',
   })
-  @Public()
   @Post('/signup')
   async signUp(
     @Body(new ValidationPipe()) signUpDto: CreateUserDto,
@@ -58,7 +58,6 @@ export class AuthController {
     description: 'Incorrect login or password',
   })
   @HttpCode(200)
-  @Public()
   @Post('/login')
   async signIn(
     @Body(new ValidationPipe()) signInDto: CreateUserDto,
@@ -85,7 +84,6 @@ export class AuthController {
     description: 'Refresh token is invalid or expired',
   })
   @HttpCode(200)
-  @Public()
   @Post('/refresh')
   async refresh(
     @Body(new ValidationPipe({ errorHttpStatusCode: 401 }))

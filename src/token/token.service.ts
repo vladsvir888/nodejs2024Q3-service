@@ -37,12 +37,12 @@ export class TokenService {
   async getTokens(payload: Record<string, unknown>): Promise<Tokens> {
     return {
       accessToken: await this.jwtService.signAsync(payload, {
-        secret: process.env.JWT_SECRET,
-        expiresIn: process.env.TOKEN_EXPIRES_IN,
+        secret: process.env.JWT_SECRET_KEY,
+        expiresIn: process.env.TOKEN_EXPIRE_TIME,
       }),
       refreshToken: await this.jwtService.signAsync(payload, {
-        secret: process.env.JWT_SECRET_REFRESH,
-        expiresIn: process.env.TOKEN_REFRESH_EXPIRES_IN,
+        secret: process.env.JWT_SECRET_REFRESH_KEY,
+        expiresIn: process.env.TOKEN_REFRESH_EXPIRE_TIME,
       }),
     };
   }
