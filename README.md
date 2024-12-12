@@ -14,7 +14,7 @@ git clone https://github.com/vladsvir888/nodejs2024Q3-service.git .
 ## Go to the branch development
 
 ```
-git checkout development-part2
+git checkout development-part3
 ```
 
 ## Install dependencies
@@ -43,6 +43,12 @@ To run all tests without authorization
 
 ```
 npm run test
+```
+
+To run all tests with authorization
+
+```
+npm run test:auth
 ```
 
 ### Auto-fix and format

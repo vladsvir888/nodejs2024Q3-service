@@ -9,6 +9,7 @@ import { UpdatePasswordDto } from './dto/update-password.dto';
 import { User, UserWithoutPassword } from './user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
@@ -48,13 +49,20 @@ export class UserService {
   }
 
   async create(user: CreateUserDto): Promise<UserWithoutPassword> {
+    const ms = Date.now();
+    const hash = await bcrypt.hash(
+      user.password,
+      Number(process.env.CRYPT_SALT),
+    );
     const newUser = {
-      ...user,
+      login: user.login,
+      password: hash,
       id: uuidv4(),
-      createdAt: Date.now(),
-      updatedAt: Date.now(),
+      createdAt: ms,
+      updatedAt: ms,
       version: 1,
     };
+
     await this.userRepository.save(newUser);
 
     return this.excludePassword([newUser])[0];
@@ -80,18 +88,29 @@ export class UserService {
       throw new NotFoundException(this.messages.NOT_FOUND);
     }
 
-    if (user.password !== data.oldPassword) {
+    const isPasswordMatch = await bcrypt.compare(
+      data.oldPassword,
+      user.password,
+    );
+
+    if (!isPasswordMatch) {
       throw new ForbiddenException(this.messages.WRONG_PASSWORD);
     }
 
+    const hash = await bcrypt.hash(
+      user.password,
+      Number(process.env.CRYPT_SALT),
+    );
     const newUser = {
       ...user,
+      password: hash,
       createdAt: Number(user.createdAt),
-      password: data.newPassword,
       version: user.version + 1,
       updatedAt: Date.now(),
     };
+
     await this.userRepository.update(id, newUser);
+
     return this.excludePassword([newUser])[0];
   }
 }
