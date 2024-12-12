@@ -11,7 +11,7 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { UserWithoutPassword } from './interfaces/user.interface';
+// import { UserWithoutPassword } from './interfaces/user.interface';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 import {
@@ -21,6 +21,7 @@ import {
   ApiParam,
   ApiOperation,
 } from '@nestjs/swagger';
+import { UserWithoutPassword } from './user.entity';
 
 @ApiTags('User')
 @Controller('user')

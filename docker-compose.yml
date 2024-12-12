@@ -1,0 +1,36 @@
+services:
+  app:
+    container_name: app
+    image: sv782/home-library-service
+    build: .
+    env_file:
+      - .env
+    ports:
+      - '${PORT}:${PORT}'
+    depends_on:
+      - db
+    restart: always
+    networks:
+      - bridge_net
+    volumes:
+      - ./src:/app/src
+  db:
+    container_name: db
+    image: postgres
+    build: ./db
+    env_file:
+      - .env
+    ports:
+      - '${POSTGRES_PORT}:${POSTGRES_PORT}'
+    restart: always
+    networks:
+      - bridge_net
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - pglogs:/var/log/postgresql
+volumes:
+  pgdata:
+  pglogs:
+networks:
+  bridge_net:
+    driver: bridge

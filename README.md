@@ -14,7 +14,7 @@ git clone https://github.com/vladsvir888/nodejs2024Q3-service.git .
 ## Go to the branch development
 
 ```
-git checkout development-part1
+git checkout development-part2
 ```
 
 ## Install dependencies
@@ -23,15 +23,17 @@ git checkout development-part1
 npm install
 ```
 
-## Running application
+## To run docker containers
 
 ```
-npm start
+npm run docker
 ```
 
-After starting the app on port (4000 as default) you can open
-in your browser OpenAPI documentation by typing http://localhost:4000/doc/.
-For more information about OpenAPI/Swagger please visit https://swagger.io/.
+## Docker scan images
+
+```
+npm run docker-scan
+```
 
 ## Testing
 
